@@ -1,9 +1,5 @@
 package com.omjego.structure;
 
-/**
- * Created by OMKAR JADHAV on 5/5/2017.
- */
-
 import com.omjego.word.Word;
 
 import java.util.List;
@@ -13,10 +9,10 @@ import java.util.List;
  */
 public interface Structure {
 
-    public Word  find(String s);
-    public boolean exists(String s);
-    public void addWord(String s, String meaning);
-    public Word getRandom();
-    public List<String> getSynonyms(String s);
-
+    Word  find(String s);
+    boolean exists(String s);
+    void addWord(String s, String meaning);
+    Word getRandom();
+    List<String> getSynonyms(String s);
+    void addList(List<String> words, List<String> meaning);
 }

@@ -3,7 +3,10 @@ package com.omjego.structure.trie;
 
 import com.omjego.structure.Structure;
 import com.omjego.word.Word;
+
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CompletionService;
 
 /**
  * Represents Trie and uses TrieNode to build the trie.
@@ -14,7 +17,7 @@ public class Trie implements Structure{
 
     private TrieNode root;
 
-    Trie() {
+    public Trie() {
         root = new TrieNode();
     }
 
@@ -32,9 +35,10 @@ public class Trie implements Structure{
         s = s.toLowerCase();
         TrieNode traveller  = root;
         for (int i = 0 ; i < s.length(); ++i) {
-            int index = s.charAt(i) - 97;
+            int index = s.charAt(i);
             traveller = traveller.getNextLevel(index);
         }
+
         return (Word)traveller.getWord();
     }
 
@@ -46,7 +50,7 @@ public class Trie implements Structure{
         TrieNode traveller  = root;
         for (int i = 0 ; i < s.length(); ++i) {
 
-            int index = s.charAt(i) - 97;
+            int index = s.charAt(i);
             TrieNode next = traveller.getNextLevel(index);
 
             //If word doesn't exist
@@ -63,13 +67,14 @@ public class Trie implements Structure{
     @Override
     public void addWord(String s, String meaning) {
 
+        //System.err.println("Word :" + s);
         Word newWord = new Word(s, meaning);
         s = s.toLowerCase();
 
         TrieNode traveller  = root;
         for (int i = 0 ; i < s.length(); ++i) {
 
-            int index = s.charAt(i) - 97;
+            int index = s.charAt(i);
             TrieNode next = traveller.getNextLevel(index);
 
             //If word doesn't exist
@@ -85,7 +90,7 @@ public class Trie implements Structure{
         }
         traveller.setEnd(true);
         traveller.setWord(newWord);
-        System.err.println("Word : " + s + " inserted successfully");
+       //System.err.println("Word : " + s + " inserted successfully");
     }
 
     @Override
@@ -96,5 +101,15 @@ public class Trie implements Structure{
     @Override
     public List<String> getSynonyms(String s) {
         return null;
+    }
+
+    @Override
+    public void addList(List<String> words, List<String> meaning) {
+
+        Iterator itWor = words.listIterator(), itMean = meaning.listIterator();
+
+        while (itWor.hasNext()) {
+            addWord((String) itWor.next(), (String) itMean.next());
+        }
     }
 }

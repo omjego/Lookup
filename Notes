@@ -1,0 +1,14 @@
+About Tries:
+    Nodes with 26-way branching typically occupy 104 bytes (26*4), and 256-way nodes consume a kilobyte.
+    Eight nodes representing the 34,000-character Unicode Standard would together require  more
+    than a megabyte!
+
+    In our project we create about 550000 trie nodes , each with 256 references and now if we assume
+    we require 2 bytes for each reference variable in Java then total memory consumed would be around
+    550000*256*2 = 281,600,000 bytes, which is a lot of memory and eventually we'll get "Out of heap space"
+    error. So better way would be to go to another trie data structure.
+
+Ternary Search Trees:
+    These trees is are perfect combination of BST(Low space) and Trie(Fast search), and all this it achieves
+    by adding left, right pointers (just like BSTs) on characters in the string(like Tries).Complexity of
+    search is O(k + log N) , where 'k' is length of string and 'N' is the size of tree.

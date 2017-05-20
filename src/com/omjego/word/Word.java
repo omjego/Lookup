@@ -1,10 +1,5 @@
 package com.omjego.word;
 
-/**
- * Created by OMKAR JADHAV on 5/5/2017.
- */
-
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +16,7 @@ public class Word {
     public Word(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
-        this.synonyms = new LinkedList<String>();
+        this.synonyms = new LinkedList<>();
 
     }
 
@@ -66,14 +61,20 @@ public class Word {
         if (this == o) return true;
         if (!(o instanceof Word)) return false;
         Word word1 = (Word) o;
-        if (!getWord().equals(word1.getWord()))
-            return false;
-        return true;
+        return getWord().equals(word1.getWord());
     }
 
     @Override
     public int hashCode() {
         return getWord().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "word='" + word + '\'' +
+                ", meaning='" + meaning + '\'' +
+                '}';
     }
 }
 

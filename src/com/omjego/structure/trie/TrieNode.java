@@ -8,18 +8,25 @@ import com.omjego.word.*;
  */
 public class TrieNode {
 
+    private static final int ALPHABET_SIZE = 256;
     private TrieNode[] nextLevel;
     private char ch;
     private Object word;     //Just to make Trie generic. Make sure to typecast the result.
     private boolean isEnd;   //Denotes if the given node is end of some string.
 
+    public static int count = 0;
+
     TrieNode() {
-        nextLevel = new TrieNode[26];
+
+        nextLevel = new TrieNode[ALPHABET_SIZE];
+        ++count;
     }
 
     TrieNode(char ch, boolean isEnd) {
         this.ch = ch;
         this.isEnd = isEnd;
+        nextLevel = new TrieNode[ALPHABET_SIZE];
+        ++count;
     }
 
     TrieNode(Object word) {
@@ -27,6 +34,7 @@ public class TrieNode {
     }
 
     public TrieNode getNextLevel(int position) {
+
         return nextLevel[position];
     }
 

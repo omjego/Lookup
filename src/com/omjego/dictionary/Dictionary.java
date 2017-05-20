@@ -1,10 +1,11 @@
 package com.omjego.dictionary;
 
 import com.omjego.structure.Structure;
+import com.omjego.structure.StructureFactory;
+import com.omjego.structure.trie.TrieNode;
 import com.omjego.word.Word;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,22 +20,74 @@ public class Dictionary {
 
     Structure structure;
     List<String> favourites, recent;
+    private static final String favFile = "favourites.txt";
+    private static final String dictFile = "words.txt";
+    private static final int maxWords = 200000;
+
     public Dictionary() {
+
+        //Initialize required  data structure. Use Factory Method.
+        StructureFactory factory = StructureFactory.getInstance();
+        structure = factory.getStructure("Trie");
+
 
         //Initialize "recent" list for this session
 
-        recent = new LinkedList<String>();
+        loadDictionary();
+        recent = new LinkedList<>();
         //Load favourites
-        loadFavourites();
-        //Initialize required  data structure. Use Factory Method.
+        //loadFavourites();
+
 
     }
 
+    /**
+     * Function load which loads Words from a given file and add them to underlying data structure
+     */
+    private void loadDictionary() {
+
+        try {
+            FileReader reader = new FileReader(dictFile);
+            BufferedReader buffer = new BufferedReader(reader);
+            String str = null;
+
+            // Modify here. Just checking if it works or not. Word may contain Meaning,
+            // synonyms, meaning in other languages and few examples.
+            int count = 0;
+            while ((str = buffer.readLine()) != null) {
+
+                str = str.trim();
+                //Add word to dictionary
+                //** Create list and then send list to the structure
+                structure.addWord(str, "NULL");
+                ++count;
+                if (count > maxWords)
+                    break;
+            }
+            System.out.println(count);
+            buffer.close();
+            reader.close();
+            System.err.println("Nodes created :" + TrieNode.count);
+            System.err.println("Dictionary loaded successfully : Words loaded- "  + count);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     *
+     * @param s : String to search into the dictionary
+     * @return  : Returns Word object representing the word, otherwise null
+     */
     public Word search(String s) {
-        return null;
+
+        return structure.find(s);
     }
 
     public List<String > getSynonyms(String s) {
+
         return null;
     }
 
@@ -53,11 +106,11 @@ public class Dictionary {
     public void loadFavourites()  {
 
         FileReader reader;
-        favourites = new LinkedList<String>();
+        favourites = new LinkedList<>();
         try {
             reader = new FileReader("");
             BufferedReader bf = new BufferedReader(reader);
-            String s = null;
+            String s;
             while ((s = bf.readLine()) != null) {
                 favourites.add(s);
             }
@@ -65,7 +118,7 @@ public class Dictionary {
             e.printStackTrace();
             return;
         }
-        System.err.println("Favourites loaded succesfully");
+        System.err.println("Favourites loaded successfully");
     }
 
     public  List<String> getFavourites() {
