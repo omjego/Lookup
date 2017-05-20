@@ -28,7 +28,8 @@ public class Dictionary {
 
         //Initialize required  data structure. Use Factory Method.
         StructureFactory factory = StructureFactory.getInstance();
-        structure = factory.getStructure("Trie");
+        //structure = factory.getStructure("Trie");
+        structure = factory.getStructure("HashTable");
 
 
         //Initialize "recent" list for this session
@@ -54,16 +55,23 @@ public class Dictionary {
             // Modify here. Just checking if it works or not. Word may contain Meaning,
             // synonyms, meaning in other languages and few examples.
             int count = 0;
+            LinkedList<String> wList , mList;
+            wList = new LinkedList<>();
+            mList = new LinkedList<>();
             while ((str = buffer.readLine()) != null) {
 
                 str = str.trim();
                 //Add word to dictionary
                 //** Create list and then send list to the structure
-                structure.addWord(str, "NULL");
+                wList.addLast(str);
+                mList.addLast("NULL");
                 ++count;
                 if (count > maxWords)
                     break;
             }
+
+            structure.addList(wList, mList);
+
             System.out.println(count);
             buffer.close();
             reader.close();

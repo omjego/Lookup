@@ -11,7 +11,7 @@ public class DictionaryTest {
 
         Dictionary dict = new Dictionary();
 
-        System.out.println(dict.search("Abol"));
+        System.out.println(dict.search("Apple"));
         //System.err.println(Runtime.getRuntime().freeMemory());
     }
 }

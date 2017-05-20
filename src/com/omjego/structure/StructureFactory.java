@@ -1,5 +1,8 @@
 package com.omjego.structure;
 
+import com.omjego.structure.hashmap.HashTable;
+import com.omjego.structure.ternary_st.TernaryTree;
+import com.omjego.structure.treemap.RBTree;
 import com.omjego.structure.trie.Trie;
 
 /**
@@ -26,6 +29,15 @@ public class StructureFactory {
 
         if (className.equals("Trie")) {
             return new Trie();
+        }
+        else if(className.equals("TernaryTree")){
+            return new TernaryTree();
+        }
+        else if(className.equals("HashTable")) {
+            return new HashTable();
+        }
+        else if(className.equals("RBTree")) {
+            return new RBTree();
         }
 
         throw new RuntimeException("Class specified does not exists");

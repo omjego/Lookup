@@ -48,11 +48,11 @@ public class TernaryTree implements Structure{
         else if( data[index] > node.getCh() ) {
             return search(node.getRight(), data, index);
         }
-        else {
-            search(node.getMid(), data, index + 1);
+        else if(data[index] == node.getCh()) {
+            return search(node.getMid(), data, index + 1);
         }
 
-        return null;
+        return null; // else who knows what happened ?
     }
 
     @Override
@@ -75,6 +75,7 @@ public class TernaryTree implements Structure{
 
         if (root == null){
             root = new TernaryNode(data[i]);  //If tree is empty then create root node
+            run = root;
         }
 
         while (i < data.length) {
