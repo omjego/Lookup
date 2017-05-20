@@ -25,7 +25,7 @@ public class StructureFactory {
         return singleton;
     }
 
-    public Structure getStructure(String className) {
+    public Structure getStructure(String    className) {
 
         if (className.equals("Trie")) {
             return new Trie();
