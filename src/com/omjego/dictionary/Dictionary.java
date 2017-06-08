@@ -1,44 +1,63 @@
 package com.omjego.dictionary;
 
+import com.omjego.auxiliary.Pair;
 import com.omjego.structure.Structure;
 import com.omjego.structure.StructureFactory;
 import com.omjego.structure.trie.TrieNode;
 import com.omjego.word.Word;
+import com.omjego.auxiliary.*;
 
 import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by OMKAR JADHAV on 5/5/2017.
  */
 
 /**
+ * Singleton class
  * This class represents main dictionary class.
  */
 public class Dictionary {
 
-    Structure structure;
-    List<String> favourites, recent;
     private static final String favFile = "favourites.txt";
     private static final String dictFile = "words.txt";
     private static final int maxWords = 200000;
 
-    public Dictionary() {
+
+    private Structure structure;
+    private List<String> favourites, recent;
+    private  Matcher matcher;
+
+    private static Dictionary singleton = null;
+
+    public static Dictionary getInstance() {
+
+        if (singleton == null ) {
+            singleton = new Dictionary();
+        }
+        return singleton;
+    }
+
+
+    private Dictionary() {
 
         //Initialize required  data structure. Use Factory Method.
         StructureFactory factory = StructureFactory.getInstance();
-        //structure = factory.getStructure("Trie");
-        structure = factory.getStructure("HashTable");
+        structure = factory.getStructure("Trie");
 
+        /*
+        TODO Initialize "recent" list for this session
+        */
 
-        //Initialize "recent" list for this session
 
         loadDictionary();
         recent = new LinkedList<>();
-        //Load favourites
-        //loadFavourites();
-
+        /*
+         TODO Load favourites
+         loadFavourites();
+        */
+        matcher = new Matcher();
 
     }
 
@@ -94,6 +113,10 @@ public class Dictionary {
         return structure.find(s);
     }
 
+    public List<Word> suggestWords(String s ) {
+        return matcher.findMatch_1(s);
+    }
+
     public List<String > getSynonyms(String s) {
 
         return null;
@@ -138,5 +161,114 @@ public class Dictionary {
             favourites.add(s);
     }
 
+    /**
+     *  Inner class which holds methods to find nearest match of given word
+     */
+    class Matcher {
+
+
+        /**
+         * Try  1 : Total brute force
+         * Find nearest match of string s differing by one char position.
+         * @param s
+         * @return
+         */
+        public List<Word> findMatch_1(String s) {
+
+            List<Word> list = new LinkedList<>();
+            s = s.toLowerCase();
+            Word result  = structure.find(s);
+
+            if (result != null ) {
+                list.add(result);
+            }
+            StringBuilder sb = new StringBuilder(s);
+            for (int i = 0; i < s.length(); i++) {
+                for (int j = 97; j <= 122 ; j++) {
+                    sb.setCharAt(i, (char)j);
+                    String str = sb.toString();
+                    if ( str.equals(s) ) {
+                        continue;
+                    }
+                    result =  structure.find( str );
+                    if (result != null) {
+                        list.add(result);
+                    }
+                }
+                sb.setCharAt(i, s.charAt(i));
+            }
+            return list;
+        }
+
+        //Suggestions Approach 2
+
+        /**
+         * Finding all the strings with "Edit distance" <= DIST, and order them using frequency with which this words
+         * used in language. Output top 10 words.
+         * @param s
+         * @return
+         */
+        public List<Word> findMatch_2(String s) {
+            List<Word> list = null;
+            s = s.toLowerCase();
+
+            PriorityQueue<Pair<String, Integer> > priorityQueue = new PriorityQueue<>(new Comparator<Pair>() {
+                @Override
+                public int compare(Pair o1, Pair o2) {
+                    Comparable obj1 = (Comparable)o1.second;
+                    Comparable obj2 = (Comparable)o2.second;
+                    return obj2.compareTo(obj1);
+                }
+            });
+            int i = 0;
+            while (  i < 10 ) {
+                String str = priorityQueue.poll().first;
+                Word word = structure.find(str);
+                if (str != null ) {
+                    list.add( word );
+                }
+            }
+            return list;
+        }
+
+        /**
+         * Unfortunately java doesn't support default parameters
+         * @param str
+         * @param DIST
+         * @return
+         */
+        private List<String>  getStringsEditDistance(String str, int DIST) {
+
+            Set<String> set = new TreeSet<>();
+            str = str.toLowerCase();
+            int N = str.length();
+            char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+            //deletes
+            for (int i = 0; i < N; i++) {
+                set.add(str.substring(0, i) + str.substring(i + 1));
+            }
+            //replaces
+            for (int i = 0; i < N; i++) {
+                for (Character ch: chars) {
+                    set.add(str.substring(0, i) + ch + str.substring(i + 1));
+                }
+            }
+
+            //transpose - exchange chars at consecutive fashion
+            for (int i = 0; i < N - 1; i++) {
+                set.add(str.substring(0, i) + str.charAt(i + 1) + str.charAt(i) +  (i + 2 < N ? str.substring(i + 2) : ""));
+            }
+
+            //inserts
+            for (int i = 0; i < N; i++) {
+                for (char ch: chars) {
+                    set.add(str.substring(0, i) + ch + str.substring(i));
+                }
+            }
+
+            return new LinkedList<>(set);
+        }
+
+    }
 
 }
