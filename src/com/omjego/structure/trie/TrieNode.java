@@ -1,7 +1,5 @@
 package com.omjego.structure.trie;
 
-import com.omjego.word.*;
-
 /**
  * Represents a node of a standard trie data structure.
  * Created by OMKAR JADHAV on 5/8/2017.

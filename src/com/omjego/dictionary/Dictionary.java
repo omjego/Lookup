@@ -3,9 +3,7 @@ package com.omjego.dictionary;
 import com.omjego.auxiliary.Pair;
 import com.omjego.structure.Structure;
 import com.omjego.structure.StructureFactory;
-import com.omjego.structure.trie.TrieNode;
 import com.omjego.word.Word;
-import com.omjego.auxiliary.*;
 
 import java.io.*;
 import java.util.*;
@@ -18,6 +16,7 @@ import java.util.*;
  * Singleton class
  * This class represents main dictionary class.
  */
+
 public class Dictionary {
 
     private static final String favFile = "favourites.txt";
@@ -44,7 +43,7 @@ public class Dictionary {
 
         //Initialize required  data structure. Use Factory Method.
         StructureFactory factory = StructureFactory.getInstance();
-        structure = factory.getStructure("Trie");
+        structure = factory.getStructure("HashTable");
 
         /*
         TODO Initialize "recent" list for this session
@@ -65,7 +64,6 @@ public class Dictionary {
      * Function load which loads Words from a given file and add them to underlying data structure
      */
     private void loadDictionary() {
-
         try {
             FileReader reader = new FileReader(dictFile);
             BufferedReader buffer = new BufferedReader(reader);
@@ -89,13 +87,16 @@ public class Dictionary {
                     break;
             }
 
+            // generateTest(wList, 100000);
+
             structure.addList(wList, mList);
 
             System.out.println(count);
             buffer.close();
             reader.close();
-            System.err.println("Nodes created :" + TrieNode.count);
-            System.err.println("Dictionary loaded successfully : Words loaded- "  + count);
+
+
+            //System.err.println("Dictionary loaded successfully : Words loaded- "  + count);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -103,6 +104,22 @@ public class Dictionary {
 
     }
 
+    private void generateTest(List<String> list, int count)  {
+        list = new ArrayList<>(list);
+        try {
+            FileWriter writer = new FileWriter("test.txt");
+
+            while (count > 0) {
+                int wIndex = (int)(Math.random()*list.size());
+                writer.write( list.get( wIndex ) + "\n");
+                --count;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.err.println("MSG : Tests generated.");
+    }
     /**
      *
      * @param s : String to search into the dictionary
@@ -247,6 +264,7 @@ public class Dictionary {
             for (int i = 0; i < N; i++) {
                 set.add(str.substring(0, i) + str.substring(i + 1));
             }
+
             //replaces
             for (int i = 0; i < N; i++) {
                 for (Character ch: chars) {
@@ -254,18 +272,16 @@ public class Dictionary {
                 }
             }
 
-            //transpose - exchange chars at consecutive fashion
+            //transpose - exchange chars at consecutive locations
             for (int i = 0; i < N - 1; i++) {
                 set.add(str.substring(0, i) + str.charAt(i + 1) + str.charAt(i) +  (i + 2 < N ? str.substring(i + 2) : ""));
             }
-
             //inserts
             for (int i = 0; i < N; i++) {
                 for (char ch: chars) {
                     set.add(str.substring(0, i) + ch + str.substring(i));
                 }
             }
-
             return new LinkedList<>(set);
         }
 
