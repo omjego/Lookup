@@ -12,20 +12,21 @@ import com.omjego.structure.trie.Trie;
 
 public class StructureFactory {
 
+
     private static StructureFactory singleton = null;
+
     private StructureFactory() {
 
     }
 
-    public static StructureFactory getInstance() {
-
-        if (singleton == null) {
-            singleton = new StructureFactory();
-        }
-        return singleton;
+    private static class SingletonHolder {
+        private static final StructureFactory singletonObject = new StructureFactory();
+    }
+    public static synchronized StructureFactory getInstance() {
+        return SingletonHolder.singletonObject;
     }
 
-    public Structure getStructure(String    className) {
+    public Structure getStructure(String  className) {
 
         if (className.equals("Trie")) {
             return new Trie();
@@ -36,7 +37,7 @@ public class StructureFactory {
         else if(className.equals("HashTable")) {
             return new HashTable();
         }
-        else if(className.equals("RBTree")) {
+            else if(className.equals("RBTree")) {
             return new RBTree();
         }
 

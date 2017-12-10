@@ -26,19 +26,20 @@ public class Trie implements Structure{
      * @param s
      * @return if string exists returns equivalent Word object otherwise null
      */
+
     @Override
     public Word find(String s) {
 
         if( ! exists(s)) {
             return null;
         }
+
         s = s.toLowerCase();
         TrieNode traveller  = root;
         for (int i = 0 ; i < s.length(); ++i) {
             int index = s.charAt(i);
             traveller = traveller.getNextLevel(index);
         }
-
         return (Word)traveller.getWord();
     }
 

@@ -30,12 +30,14 @@ public class Dictionary {
 
     private static Dictionary singleton = null;
 
-    public static Dictionary getInstance() {
 
-        if (singleton == null ) {
-            singleton = new Dictionary();
-        }
-        return singleton;
+    // Bil Pugh's method  of implementing singleton pattern
+    private static class SingletonHolder {
+        private static final Dictionary singletonObject = new Dictionary();
+    }
+
+    public static Dictionary getInstance() {
+        return SingletonHolder.singletonObject;
     }
 
 
@@ -43,7 +45,7 @@ public class Dictionary {
 
         //Initialize required  data structure. Use Factory Method.
         StructureFactory factory = StructureFactory.getInstance();
-        structure = factory.getStructure("HashTable");
+        structure = factory.getStructure("Trie");
 
         /*
         TODO Initialize "recent" list for this session
@@ -88,7 +90,6 @@ public class Dictionary {
             }
 
             // generateTest(wList, 100000);
-
             structure.addList(wList, mList);
 
             System.out.println(count);
@@ -108,7 +109,6 @@ public class Dictionary {
         list = new ArrayList<>(list);
         try {
             FileWriter writer = new FileWriter("test.txt");
-
             while (count > 0) {
                 int wIndex = (int)(Math.random()*list.size());
                 writer.write( list.get( wIndex ) + "\n");
@@ -126,7 +126,6 @@ public class Dictionary {
      * @return  : Returns Word object representing the word, otherwise null
      */
     public Word search(String s) {
-
         return structure.find(s);
     }
 
@@ -260,6 +259,7 @@ public class Dictionary {
             str = str.toLowerCase();
             int N = str.length();
             char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+
             //deletes
             for (int i = 0; i < N; i++) {
                 set.add(str.substring(0, i) + str.substring(i + 1));
@@ -282,6 +282,7 @@ public class Dictionary {
                     set.add(str.substring(0, i) + ch + str.substring(i));
                 }
             }
+
             return new LinkedList<>(set);
         }
 
